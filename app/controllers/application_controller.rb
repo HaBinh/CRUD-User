@@ -1,9 +1,9 @@
 require './config/environment'
 
-class ApplicationController < Sinatra::Base 
-
+class ApplicationController < Sinatra::Base	
+	
 	configure do
-		
+		set :public_folder, 'public'
 		set :views, 'app/views'
 		enable :sessions
 		set :session_secret, "super secret"
@@ -28,4 +28,5 @@ class ApplicationController < Sinatra::Base
 			User.find_by(:email => session[:user_email])
 		end
 	end
+
 end

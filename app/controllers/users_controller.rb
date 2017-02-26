@@ -65,6 +65,14 @@ class UsersController < ApplicationController
 			redirect '/update'
 		end
 	end
+  get '/verify' do
+    uid = Uid.where("uid = ?", params[:uid])
+    if uid[0]
+      User.update(uid[0][:user_id], :status => 1)
+      Uid.delete(uid[0][:id])
+      redirect to('/show')
+    end
+  end
 
 # ** update
   get '/update' do 
@@ -72,11 +80,12 @@ class UsersController < ApplicationController
   	erb :'users/update'
   end
 
-  put '/update' do 
+  put '/update' do
     @user = current_user
     @user.first_name = params[:first_name]
     @user.last_name = params[:last_name]
-    @user.password = params[:about_me]
+    @user.password = params[:password]
+    @user.about_me = params[:about_me]
 
     # Update avatar
     
@@ -117,5 +126,6 @@ class UsersController < ApplicationController
     end
     redirect '/search'
   end
+  
 
 end

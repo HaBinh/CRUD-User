@@ -1,3 +1,7 @@
+.navbar-brand{
+	color: black;
+	font-size: 1.5em;
+}
 .navbar.navbar-default {
 	color: black;
 	font-size: 1.3em;
@@ -11,4 +15,8 @@
 .avatar-table{
 	max-height: 80px;
 	max-width: 80px;
+}
+
+img{
+	margin-bottom: 10px;
 }
