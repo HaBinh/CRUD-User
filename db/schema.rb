@@ -13,12 +13,15 @@
 ActiveRecord::Schema.define(version: 20170223130102) do
 
   create_table "users", force: :cascade do |t|
-    t.string "first_name"
-    t.string "last_name"
-    t.string "email"
-    t.string "password"
-    t.string "about_me"
-    t.string "avatar_path"
+    t.string  "first_name"
+    t.string  "last_name"
+    t.string  "email"
+    t.string  "password"
+    t.string  "about_me"
+    t.string  "avatar_path"
+    t.integer "status"
+    t.boolean "activated"
+    t.string  "activation_token"
   end
 
 end

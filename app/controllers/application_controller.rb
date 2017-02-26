@@ -1,5 +1,5 @@
 require './config/environment'
-
+require 'pony'
 class ApplicationController < Sinatra::Base	
 	
 	configure do
@@ -26,6 +26,10 @@ class ApplicationController < Sinatra::Base
 
 		def current_user
 			User.find_by(:email => session[:user_email])
+		end
+
+		def createToken
+			Digest::MD5.hexdigest rand(1000.1).to_s
 		end
 	end
 

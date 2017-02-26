@@ -1,4 +1,3 @@
-
 class UsersController < ApplicationController 
 
 
@@ -53,7 +52,7 @@ class UsersController < ApplicationController
         f.write(file.read)
       end
 
-			@user = User.create(
+			@user = User.new(
 					:first_name =>   params[:first_name],
 					:last_name =>    params[:last_name],
 					:email =>       params[:email],
@@ -61,20 +60,29 @@ class UsersController < ApplicationController
 					:about_me =>    params[:about_me],
           :avatar_path =>  "./upload/images/#{params[:email]}"
 			)
+      token = createToken
+      @user.activation_token = token
+      @user.activated = false
+      @user.save
+      User.SendMailVerify(params[:email], token)
 			session[:user_email] = @user.email
 			redirect '/update'
 		end
 	end
+
+# Verify
   get '/verify' do
-    uid = Uid.where("uid = ?", params[:uid])
-    if uid[0]
-      User.update(uid[0][:user_id], :status => 1)
-      Uid.delete(uid[0][:id])
-      redirect to('/show')
+    @user = User.find_by(:activation_token => params[:token])
+    if @user != nil 
+      @user.activated = true
+      @user.save
+      redirect '/update'
+    else
+      "Something went wrong"
     end
   end
 
-# ** update
+# ** Update & Show
   get '/update' do 
   	@user = current_user
   	erb :'users/update'
@@ -92,7 +100,6 @@ class UsersController < ApplicationController
     if params[:avatar] != nil
       fileUpload = params[:avatar][:tempfile]
       File.delete(@user.avatar_path) if File.exist?(@user.avatar_path)
-
       File.open("./public/upload/images/#{@user.email}", 'wb') do |f|
       f.write(fileUpload.read)
       end
@@ -101,13 +108,13 @@ class UsersController < ApplicationController
     redirect '/update'
   end
 
+# Delete
   delete '/delete/:id' do 
     @user = User.find_by_id(params[:id])
     @user.destroy
   end
 
-  # ** Search 
-
+# ** Search 
   get '/search' do 
     if session[:result_search] != nil
       @user = User.find_by_id(session[:result_search])

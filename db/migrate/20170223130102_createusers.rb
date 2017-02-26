@@ -7,6 +7,9 @@ class Createusers < ActiveRecord::Migration[5.0]
   		t.string :password
   		t.string :about_me
   		t.string :avatar_path
+      t.integer :status
+      t.boolean :activated 
+      t.string :activation_token
   	end
   end
 end
